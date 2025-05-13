@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ref, onValue, update } from 'firebase/database';
 import { db } from '../firebase';
-import { addSlip, removeSlip, hasRegisteredNickname, getRegisteredNickname } from '../utils/sessionUtils';
+import { addSlip, removeSlip, hasRegisteredNickname } from '../utils/sessionUtils';
 import ErrorPage from './ErrorPage';
 
 export default function Game() {
