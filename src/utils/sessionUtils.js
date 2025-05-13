@@ -1,5 +1,5 @@
 import { db } from '../firebase';
-import { ref, set, get, update, onValue, remove, onDisconnect } from 'firebase/database';
+import { ref, set, get, update, onValue, onDisconnect } from 'firebase/database';
 import { GAME_WORDS } from './gameWords';
 
 // Function to generate a random game code from fun words

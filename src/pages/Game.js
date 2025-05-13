@@ -15,7 +15,6 @@ export default function Game() {
   const [countdown, setCountdown] = useState(null);
   const [isCreator, setIsCreator] = useState(false);
   const [timerDuration, setTimerDuration] = useState(90);
-  const [nickname, setNickname] = useState('');
 
   // Create audio element for the bell sound
   useEffect(() => {
@@ -41,10 +40,6 @@ export default function Game() {
       navigate('/');
       return;
     }
-
-    // Load the registered nickname
-    const registeredNickname = getRegisteredNickname(gameCode);
-    setNickname(registeredNickname);
 
     // Set up listener for session data
     const sessionRef = ref(db, `sessions/${gameCode}`);
