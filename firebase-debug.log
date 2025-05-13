@@ -1,0 +1,68 @@
+[debug] [2025-05-13T23:01:30.178Z] ----------------------------------------------------------------------
+[debug] [2025-05-13T23:01:30.186Z] Command:       /Users/gaurijain/.nvm/versions/node/v20.19.1/bin/node /Users/gaurijain/.npm-global/bin/firebase init
+[debug] [2025-05-13T23:01:30.187Z] CLI Version:   14.3.1
+[debug] [2025-05-13T23:01:30.187Z] Platform:      darwin
+[debug] [2025-05-13T23:01:30.188Z] Node Version:  v20.19.1
+[debug] [2025-05-13T23:01:30.188Z] Time:          Tue May 13 2025 19:01:30 GMT-0400 (Eastern Daylight Time)
+[debug] [2025-05-13T23:01:30.188Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-13T23:01:30.198Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-13T23:01:30.199Z] > authorizing via signed-in user (gauri.g.jain@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/gaurijain/Desktop/projects/whoevenareyou/whoevenareyou-app
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-05-13T23:01:45.901Z] Checked if tokens are valid: true, expires at: 1747180811549
+[debug] [2025-05-13T23:01:45.904Z] Checked if tokens are valid: true, expires at: 1747180811549
+[debug] [2025-05-13T23:01:45.908Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-05-13T23:01:46.354Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-05-13T23:01:46.355Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project whoevenareyou-86aee (WhoEvenAreYou) 
+[info] 
+=== Hosting Setup
+[debug] [2025-05-13T23:01:52.725Z] Checked if tokens are valid: true, expires at: 1747180811549
+[debug] [2025-05-13T23:01:52.726Z] Checked if tokens are valid: true, expires at: 1747180811549
+[debug] [2025-05-13T23:01:52.727Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/whoevenareyou-86aee [none]
+[debug] [2025-05-13T23:01:53.072Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/whoevenareyou-86aee 200
+[debug] [2025-05-13T23:01:53.073Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/whoevenareyou-86aee {"projectId":"whoevenareyou-86aee","projectNumber":"485234089978","displayName":"WhoEvenAreYou","name":"projects/whoevenareyou-86aee","resources":{"hostingSite":"whoevenareyou-86aee","realtimeDatabaseInstance":"whoevenareyou-86aee-default-rtdb"},"state":"ACTIVE","etag":"1_92184e58-2cdf-47da-bb7c-20ab6a16ff04"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2025-05-13T23:03:43.055Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2025-05-13T23:03:43.416Z] <<< [apiv2][status] GET https://www.gstatic.com/firebasejs/releases.json 200
+[debug] [2025-05-13T23:03:43.417Z] <<< [apiv2][body] GET https://www.gstatic.com/firebasejs/releases.json {"current":{"version":"11.7.1","browserURL":"https://www.gstatic.com/firebasejs/11.7.1/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/11.7.1/firebase.tgz"},"live":{"version":"11.7","browserURL":"https://www.gstatic.com/firebasejs/live/11.7/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/live/11.7/firebase.tgz"},"components":{"analytics":"https://www.gstatic.com/firebasejs/11.7.1/firebase-analytics.js","app":"https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js","app-check":"https://www.gstatic.com/firebasejs/11.7.1/firebase-app-check.js","auth":"https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js","auth/cordova":"https://www.gstatic.com/firebasejs/11.7.1/firebase-auth/cordova.js","auth/web-extension":"https://www.gstatic.com/firebasejs/11.7.1/firebase-auth/web-extension.js","functions":"https://www.gstatic.com/firebasejs/11.7.1/firebase-functions.js","firestore":"https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js","firestore/lite":"https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore/lite.js","installations":"https://www.gstatic.com/firebasejs/11.7.1/firebase-installations.js","storage":"https://www.gstatic.com/firebasejs/11.7.1/firebase-storage.js","performance":"https://www.gstatic.com/firebasejs/11.7.1/firebase-performance.js","remote-config":"https://www.gstatic.com/firebasejs/11.7.1/firebase-remote-config.js","messaging":"https://www.gstatic.com/firebasejs/11.7.1/firebase-messaging.js","messaging/sw":"https://www.gstatic.com/firebasejs/11.7.1/firebase-messaging/sw.js","database":"https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js","vertexai":"https://www.gstatic.com/firebasejs/11.7.1/firebase-vertexai.js","data-connect":"https://www.gstatic.com/firebasejs/11.7.1/firebase-data-connect.js","firestore.memory":"https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.memory.js"}}
+[info] ✔  Wrote build/index.html 
+[info] 
+[info] i  Detected a .git folder at /Users/gaurijain/Desktop/projects/whoevenareyou/whoevenareyou-app 
+[info] i  Authorizing with GitHub to upload your service account to a GitHub repository's secrets store. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://github.com/login/oauth/authorize?client_id=89cf50f02ac6aaed3484&state=923906728&redirect_uri=http%3A%2F%2Flocalhost%3A9005&scope=read%3Auser%20repo%20public_repo
+[info] 
+[info] Waiting for authentication...
+[debug] [2025-05-13T23:04:00.082Z] >>> [apiv2][query] POST https://github.com/login/oauth/access_token [none]
+[debug] [2025-05-13T23:04:00.103Z] >>> [apiv2][body] POST https://github.com/login/oauth/access_token [stream]
+[debug] [2025-05-13T23:04:00.321Z] <<< [apiv2][status] POST https://github.com/login/oauth/access_token 200
+[debug] [2025-05-13T23:04:00.322Z] <<< [apiv2][body] POST https://github.com/login/oauth/access_token {"access_token":"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","token_type":"bearer","scope":"read:user,repo"}
+[debug] [2025-05-13T23:04:00.345Z] >>> [apiv2][query] GET https://api.github.com/user [none]
+[debug] [2025-05-13T23:04:00.571Z] <<< [apiv2][status] GET https://api.github.com/user 200
+[debug] [2025-05-13T23:04:00.572Z] <<< [apiv2][body] GET https://api.github.com/user {"login":"Gjain234","id":25145128,"node_id":"MDQ6VXNlcjI1MTQ1MTI4","avatar_url":"https://avatars.githubusercontent.com/u/25145128?v=4","gravatar_id":"","url":"https://api.github.com/users/Gjain234","html_url":"https://github.com/Gjain234","followers_url":"https://api.github.com/users/Gjain234/followers","following_url":"https://api.github.com/users/Gjain234/following{/other_user}","gists_url":"https://api.github.com/users/Gjain234/gists{/gist_id}","starred_url":"https://api.github.com/users/Gjain234/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/Gjain234/subscriptions","organizations_url":"https://api.github.com/users/Gjain234/orgs","repos_url":"https://api.github.com/users/Gjain234/repos","events_url":"https://api.github.com/users/Gjain234/events{/privacy}","received_events_url":"https://api.github.com/users/Gjain234/received_events","type":"User","user_view_type":"private","site_admin":false,"name":"Gauri Jain","company":null,"blog":"","location":null,"email":"gaurijain@g.harvard.edu","hireable":null,"bio":"Computer Science Phd Student at Harvard University","twitter_username":null,"notification_email":"gaurijain@g.harvard.edu","public_repos":18,"public_gists":1,"followers":5,"following":0,"created_at":"2017-01-16T06:24:00Z","updated_at":"2025-04-26T21:51:00Z","private_gists":0,"total_private_repos":7,"owned_private_repos":7,"disk_usage":67615,"collaborators":3,"two_factor_authentication":true,"plan":{"name":"pro","space":976562499,"collaborators":0,"private_repos":9999}}
+[info] 
+[info] ✔  Success! Logged into GitHub as Gjain234 
+[info] 
