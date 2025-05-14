@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createGameSession, joinGameSession } from '../utils/sessionUtils';
 
@@ -11,9 +11,17 @@ export default function Home() {
   const [showNicknameInput, setShowNicknameInput] = useState(false);
   const [actionType, setActionType] = useState(''); // 'create' or 'join'
 
+  // Clear error state when component unmounts
+  useEffect(() => {
+    return () => {
+      setError('');
+    };
+  }, []);
+
   const handleCreateGame = async () => {
     setActionType('create');
     setShowNicknameInput(true);
+    setError('');
   };
 
   const handleJoinGame = async () => {
