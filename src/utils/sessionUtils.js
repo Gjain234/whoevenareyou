@@ -220,7 +220,7 @@ export const removeSlip = async (gameCode, slipIndex) => {
   playerSlips.splice(slipIndex, 1);
   
   await update(sessionRef, {
-    [`playerSlips.${playerId}`]: playerSlips
+    [`playerSlips/${playerId}`]: playerSlips
   });
 };
 
