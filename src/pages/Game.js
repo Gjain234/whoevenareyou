@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ref, onValue, update } from 'firebase/database';
 import { db } from '../firebase';
-import { addSlip, removeSlip, hasRegisteredNickname } from '../utils/sessionUtils';
+import { addSlip, removeSlip, hasRegisteredNickname, usurpHost } from '../utils/sessionUtils';
 import ErrorPage from './ErrorPage';
 
 export default function Game() {
@@ -15,6 +15,8 @@ export default function Game() {
   const [countdown, setCountdown] = useState(null);
   const [isCreator, setIsCreator] = useState(false);
   const [timerDuration, setTimerDuration] = useState(90);
+  const [timerError, setTimerError] = useState('');
+  const [isUsurping, setIsUsurping] = useState(false);
 
   // Create audio element for the bell sound
   useEffect(() => {
@@ -125,8 +127,30 @@ export default function Game() {
     }
   };
 
+  const handleTimerChange = (e) => {
+    const value = e.target.value;
+    setTimerDuration(value);
+    
+    if (value === '') {
+      setTimerError('');
+    } else {
+      const num = parseInt(value);
+      if (isNaN(num) || num <= 0) {
+        setTimerError('Please enter a number greater than 0');
+      } else {
+        setTimerError('');
+      }
+    }
+  };
+
   const startCountdown = () => {
-    setCountdown(timerDuration);
+    const num = parseInt(timerDuration);
+    if (isNaN(num) || num <= 0) {
+      setTimerError('Please enter a number greater than 0');
+      return;
+    }
+    
+    setCountdown(num);
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     audio.volume = 0.5;
     
@@ -187,6 +211,21 @@ export default function Game() {
     }
   };
 
+  const handleUsurpHost = async () => {
+    if (isCreator) return; // Don't allow host to usurp themselves
+    
+    setIsUsurping(true);
+    try {
+      await usurpHost(gameCode);
+    } catch (err) {
+      console.error('Failed to usurp host:', err);
+    } finally {
+      setIsUsurping(false);
+    }
+  };
+
+
+
   if (error) {
     return <ErrorPage message={error.message} gameCode={error.gameCode} />;
   }
@@ -222,6 +261,15 @@ export default function Game() {
                 </span>
               </p>
             )}
+            {!isCreator && (
+              <button
+                onClick={handleUsurpHost}
+                disabled={isUsurping}
+                className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:opacity-50"
+              >
+                {isUsurping ? 'Becoming Host...' : 'Become Host'}
+              </button>
+            )}
           </div>
         </div>
 
@@ -241,9 +289,11 @@ export default function Game() {
               <h3 className="font-medium text-gray-800">How to Play:</h3>
               <ol className="list-decimal list-inside space-y-2">
                 <li>Each player writes anonymous slips about themselves</li>
-                <li>The group will switch off reading each slip aloud</li>
-                <li>Players discuss and try to guess who wrote each slip while the person who wrote the slip should be trying to throw the scent off</li>
-                <li>After discussion, the group votes on who they think wrote the slip and if they guess incorrectly the writer wins that round</li>
+                <li>The host will reveal each slip one at a time</li>
+                <li>After a slip is revealed, everyone argues about who they think wrote it</li>
+                <li>The person who wrote the slip should try to throw others off during discussion</li>
+                <li>Once everyone has voted, the writer reveals themselves.</li>
+                <li>If the majority guesses incorrectly, the writer wins that round</li>
                 <li>Move on to the next slip and repeat!</li>
               </ol>
               <p className="text-sm text-gray-500 mt-2">Share the game code with your friends to join!</p>
@@ -337,8 +387,8 @@ export default function Game() {
         {/* Playing Phase */}
         {gameStatus === 'playing' && (
           <div className="bg-white rounded-lg shadow-lg p-6">
-            {isCreator ? (
-              <div className="space-y-4">
+            <div className="space-y-4">
+              {isCreator && (
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-4">
                     <h2 className="text-xl font-semibold">Slips Remaining: {sessionData.allSlips?.length}</h2>
@@ -347,10 +397,8 @@ export default function Game() {
                       <input
                         type="number"
                         id="timer"
-                        min="10"
-                        max="300"
                         value={timerDuration}
-                        onChange={(e) => setTimerDuration(Math.max(10, Math.min(300, parseInt(e.target.value) || 90)))}
+                        onChange={handleTimerChange}
                         className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -363,79 +411,69 @@ export default function Game() {
                     Start Timer
                   </button>
                 </div>
+              )}
 
-                {countdown && (
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-blue-500">
-                      {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      {countdown === 1 ? 'Second remaining' : 'Seconds remaining'}
-                    </div>
+              {countdown && (
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-blue-500">
+                    {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}
                   </div>
-                )}
+                  <div className="text-sm text-gray-500 mt-1">
+                    {countdown === 1 ? 'Second remaining' : 'Seconds remaining'}
+                  </div>
+                </div>
+              )}
 
-                {sessionData.allSlips?.length > 0 ? (
-                  <div>
-                    <div className="p-4 bg-gray-50 rounded-md mb-4 min-h-[100px] flex items-center justify-center">
-                      {sessionData.revealedSlip ? (
-                        <p className="text-lg">{sessionData.allSlips[0]}</p>
-                      ) : (
-                        <button
-                          onClick={async () => {
-                            await update(ref(db, `sessions/${gameCode}`), {
-                              revealedSlip: true
-                            });
-                          }}
-                          className="w-full h-full py-8 bg-purple-100 hover:bg-purple-200 rounded-md transition-colors"
-                        >
-                          Click to Reveal Slip
-                        </button>
-                      )}
-                    </div>
-                    <div className="flex space-x-4">
+              {sessionData.allSlips?.length > 0 ? (
+                <div>
+                  <div className="p-4 bg-gray-50 rounded-md mb-4 min-h-[100px] flex items-center justify-center">
+                    {sessionData.revealedSlip ? (
+                      <button
+                        onClick={handleRevealSlip}
+                        className="w-full h-full py-8 bg-purple-100 hover:bg-purple-200 rounded-md transition-colors"
+                      >
+                        Click to Reveal Slip
+                      </button>
+                    ) : (
+                      <button
+                        onClick={async () => {
+                          await update(ref(db, `sessions/${gameCode}`), {
+                            revealedSlip: true
+                          });
+                        }}
+                        className="w-full h-full py-8 bg-purple-100 hover:bg-purple-200 rounded-md transition-colors"
+                      >
+                        Click to Reveal Slip
+                      </button>
+                    )}
+                  </div>
+
+
+                  {isCreator && (
+                    <div className="flex space-x-4 mt-4">
                       <button
                         onClick={goToPreviousSlip}
                         disabled={isLoading || !sessionData.slipHistory?.length}
-                        className="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50"
+                        className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 transition-colors border border-gray-200"
                       >
                         Previous Slip
                       </button>
                       <button
                         onClick={goToNextSlip}
                         disabled={isLoading || !sessionData.revealedSlip}
-                        className="flex-1 bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
+                        className="flex-1 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
                       >
                         Next Slip
                       </button>
                     </div>
-                  </div>
-                ) : (
-                  <div className="text-center text-xl">
-                    The bowl is empty! 🎉
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center">
-                <h2 className="text-xl font-semibold mb-4">Slips will be drawn from host's device</h2>
-                {countdown && (
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-blue-500">
-                      {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      {countdown === 1 ? 'Second remaining' : 'Seconds remaining'}
-                    </div>
-                  </div>
-                )}
-                {sessionData.revealedSlip && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-md">
-                    <p className="text-lg">{sessionData.allSlips[0]}</p>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              ) : (
+                <div className="text-center text-xl">
+                  The bowl is empty! 🎉
+                </div>
+              )}
+            </div>
           </div>
         )}
 

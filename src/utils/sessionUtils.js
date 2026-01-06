@@ -83,6 +83,7 @@ export const createGameSession = async (nickname) => {
 
 // Join an existing game session
 export const joinGameSession = async (gameCode, nickname) => {
+  let playerId;
   try {
     console.log('Attempting to join game:', gameCode);
     
@@ -104,11 +105,12 @@ export const joinGameSession = async (gameCode, nickname) => {
     console.log('Found game session:', sessionData);
 
     // Generate player ID and store in localStorage
-    const playerId = generatePlayerId();
+    playerId = generatePlayerId();
     console.log('Generated player ID:', playerId);
     
     localStorage.setItem(`player_${gameCode}`, playerId);
     localStorage.setItem(`nickname_${gameCode}`, nickname);
+    localStorage.setItem(`nickname_${gameCode}_${playerId}`, nickname); // Store nickname with player ID
 
     // Update session with new player
     const updates = {
@@ -144,6 +146,9 @@ export const joinGameSession = async (gameCode, nickname) => {
     if (gameCode) {
       localStorage.removeItem(`player_${gameCode}`);
       localStorage.removeItem(`nickname_${gameCode}`);
+      if (playerId) {
+        localStorage.removeItem(`nickname_${gameCode}_${playerId}`);
+      }
     }
     throw error;
   }
@@ -228,4 +233,30 @@ export const removeSlip = async (gameCode, slipIndex) => {
 export const getPlayerSlips = (sessionData) => {
   const playerId = localStorage.getItem(`player_${sessionData.id}`);
   return sessionData.playerSlips?.[playerId] || [];
-}; 
+};
+
+// Usurp host role
+export const usurpHost = async (gameCode) => {
+  const sessionRef = ref(db, `sessions/${gameCode}`);
+  const sessionSnapshot = await get(sessionRef);
+  const playerId = localStorage.getItem(`player_${gameCode}`);
+  
+  if (!sessionSnapshot.exists() || !playerId) {
+    throw new Error('Game not found');
+  }
+
+  const sessionData = sessionSnapshot.val();
+  
+  // Find current host
+  const currentHost = Object.entries(sessionData.players || {}).find(([_, player]) => player.isCreator)?.[0];
+  
+  if (!currentHost) {
+    throw new Error('No current host found');
+  }
+
+  // Update both players - remove host from current host and assign to new host
+  await update(sessionRef, {
+    [`players/${currentHost}/isCreator`]: false,
+    [`players/${playerId}/isCreator`]: true
+  });
+};
