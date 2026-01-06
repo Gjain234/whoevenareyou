@@ -149,7 +149,7 @@ export default function Game() {
       setTimerError('Please enter a number greater than 0');
       return;
     }
-    
+    setTimerError('');
     setCountdown(num);
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     audio.volume = 0.5;
@@ -416,7 +416,11 @@ export default function Game() {
                   </button>
                 </div>
               )}
-
+              {isCreator && timerError && (
+                <p className="text-sm text-red-500 mt-1">
+                  {timerError}
+                </p>
+              )}
               {countdown && (
                 <div className="text-center">
                   <div className="text-4xl font-bold text-blue-500">
