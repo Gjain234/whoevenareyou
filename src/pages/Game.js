@@ -224,7 +224,11 @@ export default function Game() {
     }
   };
 
-
+  const handleRevealSlip = async () => {
+    await update(ref(db, `sessions/${gameCode}`), {
+      revealedSlip: true
+    });
+  };
 
   if (error) {
     return <ErrorPage message={error.message} gameCode={error.gameCode} />;
